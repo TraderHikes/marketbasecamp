@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Basecamp — Professional Trading Dashboard | TraderHikes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070a14;
+  --bg-elevated:#0d1224;
+  --surface:#131829;
+  --surface-2:#1a2138;
+  --border:#232b45;
+  --accent-violet:#6366f1;
+  --accent-violet-bright:#818cf8;
+  --accent-cyan:#2dd4bf;
+  --accent-rose:#f43f5e;
+  --accent-amber:#f59e0b;
+  --text-primary:#f1f5f9;
+  --text-secondary:#cbd5e1;
+  --text-muted:#7c8aab;
+  --text-faint:#4a5578;
+  --font-display:'Inter',-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:24px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:var(--font-display);
+  background:var(--bg);
+  color:var(--text-primary);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 32px;
+}
+
+@media (max-width:768px){
+  .container{padding:0 20px;}
+}
+
+/* ===== NAV ===== */
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100;
+  backdrop-filter:blur(20px) saturate(180%);
+  background:rgba(7,10,20,0.7);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.nav-inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.nav-logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:var(--text-primary);
+}
+.nav-logo-badge{
+  width:38px;height:38px;
+  border-radius:10px;
+  background:linear-gradient(145deg,#1e2444,#10142a);
+  border:1px solid rgba(99,102,241,0.4);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:1px;
+  color:var(--accent-violet-bright);
+  box-shadow:0 0 20px rgba(99,102,241,0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.nav-logo-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+.nav-logo-text span:last-child{color:var(--accent-violet-bright);}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:36px;
+}
+.nav-links a{
+  color:var(--text-muted);
+  text-decoration:none;
+  font-size:14px;
+  font-weight:500;
+  transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--text-primary);}
+
+.nav-cta{
+  padding:10px 22px;
+  border-radius:100px;
+  background:var(--accent-violet);
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  transition:all 0.25s ease;
+  box-shadow:0 0 0 0 rgba(99,102,241,0.5);
+}
+.nav-cta:hover{
+  background:var(--accent-violet-bright);
+  box-shadow:0 0 24px rgba(99,102,241,0.5);
+  transform:translateY(-1px);
+}
+
+@media (max-width:900px){
+  .nav-links a:not(.nav-cta-wrap){display:none;}
+}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:140px 32px 100px;
+  text-align:center;
+  overflow:hidden;
+}
+
+.hero-glow{
+  position:absolute;
+  top:-20%;
+  left:50%;
+  transform:translateX(-50%);
+  width:1000px;
+  height:1000px;
+  background:radial-gradient(circle, rgba(99,102,241,0.18) 0%, rgba(99,102,241,0.04) 40%, transparent 70%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.hero-content{
+  position:relative;
+  z-index:1;
+  max-width:780px;
+}
+
+.hero-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 16px;
+  border-radius:100px;
+  border:1px solid rgba(99,102,241,0.35);
+  background:rgba(99,102,241,0.08);
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:500;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--accent-violet-bright);
+  margin-bottom:32px;
+  opacity:0;
+  animation:fadeUp 0.8s ease forwards;
+}
+
+.hero-eyebrow .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent-cyan);
+  box-shadow:0 0 8px var(--accent-cyan);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{opacity:1;}
+  50%{opacity:0.4;}
+}
+
+.hero h1{
+  font-size:clamp(40px, 7vw, 76px);
+  font-weight:800;
+  line-height:1.06;
+  letter-spacing:-2.5px;
+  margin-bottom:24px;
+  opacity:0;
+  animation:fadeUp 0.8s ease 0.1s forwards;
+}
+
+.hero h1 .grad{
+  background:linear-gradient(135deg, var(--accent-violet-bright) 0%, var(--accent-cyan) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero-sub{
+  font-size:clamp(16px, 2.2vw, 20px);
+  color:var(--text-secondary);
+  line-height:1.6;
+  max-width:600px;
+  margin:0 auto 40px;
+  opacity:0;
+  animation:fadeUp 0.8s ease 0.2s forwards;
+}
+
+.hero-sub strong{color:var(--text-primary); font-weight:600;}
+
+.hero-ctas{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:80px;
+  opacity:0;
+  animation:fadeUp 0.8s ease 0.3s forwards;
+}
+
+.btn-primary{
+  padding:15px 32px;
+  border-radius:100px;
+  background:var(--accent-violet);
+  color:#fff;
+  text-decoration:none;
+  font-size:15px;
+  font-weight:600;
+  transition:all 0.25s ease;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.btn-primary:hover{
+  background:var(--accent-violet-bright);
+  box-shadow:0 0 30px rgba(99,102,241,0.45);
+  transform:translateY(-2px);
+}
+
+.btn-secondary{
+  padding:15px 32px;
+  border-radius:100px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text-primary);
+  text-decoration:none;
+  font-size:15px;
+  font-weight:600;
+  transition:all 0.25s ease;
+  backdrop-filter:blur(10px);
+}
+.btn-secondary:hover{
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(255,255,255,0.2);
+  transform:translateY(-2px);
+}
+
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(24px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* ===== HERO GAUGE WIDGET (signature element) ===== */
+.hero-widget{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:920px;
+  background:linear-gradient(180deg, var(--bg-elevated) 0%, #0a0e1c 100%);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:32px;
+  box-shadow:0 30px 90px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  opacity:0;
+  animation:fadeUp 1s ease 0.4s forwards;
+}
+
+.widget-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:24px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+@media (max-width:600px){
+  .widget-header{flex-direction:column; align-items:flex-start;}
+  .widget-meta{text-align:left;}
+}
+
+.widget-title{
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--text-secondary);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.widget-meta{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--text-faint);
+  text-align:right;
+}
+
+.ai-badge{
+  font-family:var(--font-mono);
+  font-size:10px;
+  padding:4px 10px;
+  border-radius:100px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  letter-spacing:1px;
+}
+
+.gauge-row{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:40px;
+  align-items:center;
+}
+
+@media (max-width:768px){
+  .gauge-row{grid-template-columns:1fr; gap:28px;}
+  .hero-widget{padding:22px;}
+}
+
+.gauge-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.gauge-svg{width:100%; max-width:260px;}
+
+.gauge-value{
+  font-family:var(--font-mono);
+  font-size:52px;
+  font-weight:700;
+  margin-top:-50px;
+  letter-spacing:-1px;
+}
+.gauge-value .of100{
+  font-size:20px;
+  color:var(--text-faint);
+  font-weight:500;
+}
+.gauge-label{
+  font-family:var(--font-mono);
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--accent-rose);
+  margin-top:6px;
+}
+
+.gauge-sublabels{
+  display:flex;
+  gap:24px;
+  margin-top:18px;
+}
+.gauge-sub{
+  text-align:center;
+  padding:10px 18px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  background:rgba(255,255,255,0.015);
+}
+.gauge-sub-label{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:4px;
+}
+.gauge-sub-value{
+  font-family:var(--font-mono);
+  font-size:22px;
+  font-weight:700;
+  color:var(--accent-rose);
+}
+.gauge-sub-caption{
+  font-size:9px;
+  color:var(--text-faint);
+  margin-top:2px;
+}
+
+.indicator-list{
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+}
+.indicator-group-label{
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:2px;
+  margin-top:8px;
+}
+.indicator-group-label:first-child{margin-top:0;}
+
+.indicator-row{
+  display:grid;
+  grid-template-columns:140px 1fr 36px;
+  align-items:center;
+  gap:14px;
+}
+.indicator-name{
+  font-size:13px;
+  color:var(--text-secondary);
+}
+.indicator-bar-track{
+  height:6px;
+  border-radius:3px;
+  background:var(--surface-2);
+  overflow:hidden;
+}
+.indicator-bar-fill{
+  height:100%;
+  border-radius:3px;
+  background:linear-gradient(90deg, var(--accent-rose), #fb7185);
+  width:0%;
+  transition:width 1.4s cubic-bezier(.16,1,.3,1);
+}
+.indicator-value{
+  font-family:var(--font-mono);
+  font-size:13px;
+  font-weight:600;
+  color:var(--accent-rose);
+  text-align:right;
+}
+
+@media (max-width:520px){
+  .indicator-row{grid-template-columns:100px 1fr 32px; gap:8px;}
+  .indicator-name{font-size:11px;}
+  .gauge-sublabels{gap:12px;}
+  .gauge-sub{padding:8px 12px;}
+}
+
+/* ===== SECTION SCAFFOLDING ===== */
+.section{
+  padding:140px 0;
+  position:relative;
+}
+@media (max-width:768px){
+  .section{padding:70px 0;}
+}
+@media (max-width:480px){
+  .section{padding:56px 0;}
+}
+
+.section-eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--accent-violet-bright);
+  margin-bottom:18px;
+}
+
+.section-title{
+  font-size:clamp(32px, 4.5vw, 48px);
+  font-weight:800;
+  letter-spacing:-1.5px;
+  line-height:1.15;
+  margin-bottom:20px;
+  max-width:600px;
+}
+
+.section-desc{
+  font-size:17px;
+  color:var(--text-muted);
+  line-height:1.7;
+  max-width:480px;
+  margin-bottom:32px;
+}
+
+.feature-list{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-bottom:36px;
+}
+.feature-item{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+}
+.feature-item-icon{
+  flex-shrink:0;
+  width:28px;height:28px;
+  border-radius:8px;
+  background:rgba(99,102,241,0.1);
+  border:1px solid rgba(99,102,241,0.25);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent-violet-bright);
+  font-size:14px;
+  margin-top:2px;
+}
+.feature-item-text{
+  font-size:15px;
+  color:var(--text-secondary);
+  line-height:1.6;
+}
+.feature-item-text strong{color:var(--text-primary); font-weight:600;}
+
+/* Two-column feature layout */
+.feature-grid{
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:64px;
+  align-items:center;
+}
+.feature-grid.reverse{
+  grid-template-columns:1.15fr 1fr;
+}
+.feature-grid.reverse .feature-text{order:2;}
+.feature-grid.reverse .feature-visual{order:1;}
+
+@media (max-width:1000px){
+  .feature-grid, .feature-grid.reverse{
+    grid-template-columns:1fr;
+    gap:40px;
+  }
+  .feature-grid.reverse .feature-text{order:1;}
+  .feature-grid.reverse .feature-visual{order:2;}
+}
+
+.feature-visual{
+  position:relative;
+}
+
+/* Reveal-on-scroll */
+.reveal{
+  opacity:0;
+  transform:translateY(40px);
+  transition:opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== MOCKUP CARD STYLES ===== */
+.mockup-card{
+  background:linear-gradient(180deg, var(--bg-elevated) 0%, #0a0e1c 100%);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,0.6);
+}
+
+.mockup-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:20px;
+}
+.mockup-tab{
+  font-family:var(--font-mono);
+  font-size:11px;
+  padding:8px 16px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  letter-spacing:0.5px;
+}
+.mockup-tab.active{
+  background:rgba(99,102,241,0.12);
+  border-color:rgba(99,102,241,0.4);
+  color:var(--accent-violet-bright);
+  font-weight:600;
+}
+
+/* Sectoral heatmap grid */
+.heatmap-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:8px;
+}
+@media (max-width:480px){
+  .heatmap-grid{grid-template-columns:repeat(2, 1fr);}
+}
+.heatmap-cell{
+  border-radius:var(--radius-sm);
+  padding:14px 12px;
+  border:1px solid var(--border);
+  background:var(--surface);
+}
+.heatmap-cell-name{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:8px;
+  display:flex;
+  justify-content:space-between;
+}
+.heatmap-cell-score{
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:24px;
+  margin-bottom:6px;
+}
+.heatmap-cell-bar{
+  height:4px;
+  border-radius:2px;
+  background:var(--surface-2);
+  overflow:hidden;
+  margin-bottom:8px;
+}
+.heatmap-cell-bar-fill{height:100%; border-radius:2px;}
+.heatmap-tag{
+  font-family:var(--font-mono);
+  font-size:8px;
+  letter-spacing:1px;
+  padding:2px 6px;
+  border-radius:4px;
+  display:inline-block;
+}
+.tag-bear{background:rgba(244,63,94,0.12); color:var(--accent-rose); border:1px solid rgba(244,63,94,0.3);}
+.tag-strongbear{background:rgba(244,63,94,0.2); color:#fb7185; border:1px solid rgba(244,63,94,0.4);}
+.tag-neutral{background:rgba(245,158,11,0.12); color:var(--accent-amber); border:1px solid rgba(245,158,11,0.3);}
+.tag-bull{background:rgba(45,212,191,0.12); color:var(--accent-cyan); border:1px solid rgba(45,212,191,0.3);}
+
+/* Watchlist table */
+.watchlist-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+.watchlist-table th{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  text-align:left;
+  padding:0 10px 12px;
+  font-weight:500;
+}
+.watchlist-table th:not(:first-child):not(:nth-child(2)){text-align:right;}
+.watchlist-table td{
+  padding:11px 10px;
+  border-top:1px solid var(--border);
+}
+.watchlist-table td:not(:first-child):not(:nth-child(2)){text-align:right; font-family:var(--font-mono);}
+.wt-symbol{font-weight:700; font-family:var(--font-mono); font-size:12px;}
+.wt-company{color:var(--text-faint); font-size:11px;}
+.wt-score{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:12px;
+  padding:3px 9px;
+  border-radius:6px;
+  background:rgba(45,212,191,0.12);
+  color:var(--accent-cyan);
+}
+.wt-pos{color:var(--accent-cyan);}
+.wt-neg{color:var(--accent-rose);}
+
+/* Trade journal card */
+.trade-card{
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:20px;
+  background:var(--surface);
+}
+.trade-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:16px;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.trade-card-header > div:first-child{flex:1; min-width:0;}
+.trade-card-symbol{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:4px;
+}
+.trade-card-symbol .sym{font-family:var(--font-mono); font-weight:700; font-size:18px;}
+.trade-tag{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:0.5px;
+  padding:3px 8px;
+  border-radius:5px;
+  font-weight:600;
+}
+.tag-long{background:rgba(45,212,191,0.12); color:var(--accent-cyan); border:1px solid rgba(45,212,191,0.3);}
+.tag-pyramid{background:rgba(99,102,241,0.12); color:var(--accent-violet-bright); border:1px solid rgba(99,102,241,0.3);}
+.tag-reduced{background:rgba(245,158,11,0.12); color:var(--accent-amber); border:1px solid rgba(245,158,11,0.3);}
+.trade-card-name{font-size:12px; color:var(--text-muted);}
+.trade-card-return{
+  font-family:var(--font-mono);
+  font-size:24px;
+  font-weight:700;
+  color:var(--accent-cyan);
+  text-align:right;
+}
+.trade-card-return-sub{font-family:var(--font-mono); font-size:12px; color:var(--text-faint); text-align:right;}
+
+.trade-note{
+  font-size:13px;
+  font-style:italic;
+  color:var(--text-secondary);
+  background:var(--bg-elevated);
+  border-left:2px solid var(--accent-violet);
+  padding:10px 14px;
+  border-radius:0 8px 8px 0;
+  margin-bottom:16px;
+}
+
+.trade-stats{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:10px;
+  margin-bottom:16px;
+}
+.trade-stat{
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:10px 12px;
+  background:var(--bg-elevated);
+}
+.trade-stat-label{font-family:var(--font-mono); font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--text-faint); margin-bottom:4px;}
+.trade-stat-value{font-family:var(--font-mono); font-size:15px; font-weight:700;}
+
+.trade-log{font-size:12px;}
+.trade-log-row{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+  border-top:1px solid var(--border);
+  color:var(--text-muted);
+}
+.trade-log-row:first-child{border-top:none;}
+.trade-log-date{font-family:var(--font-mono); color:var(--text-faint); margin-right:10px;}
+
+@media (max-width:520px){
+  .trade-card-symbol{flex-wrap:wrap;}
+  .trade-stats{grid-template-columns:1fr;}
+  .trade-stat-value{font-size:14px; word-break:break-word;}
+  .trade-log-row{flex-direction:column; gap:2px; align-items:flex-start;}
+  .trade-card-return{font-size:22px;}
+}
+
+/* ===== PRICING ===== */
+.pricing-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:24px;
+  margin-bottom:64px;
+}
+@media (max-width:900px){
+  .pricing-grid{grid-template-columns:1fr; max-width:420px; margin-left:auto; margin-right:auto;}
+}
+
+.price-card{
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:32px;
+  background:var(--bg-elevated);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  transition:transform 0.3s ease, border-color 0.3s ease;
+}
+.price-card:hover{transform:translateY(-6px);}
+
+.price-card.featured{
+  border-color:rgba(99,102,241,0.5);
+  background:linear-gradient(180deg, rgba(99,102,241,0.08) 0%, var(--bg-elevated) 100%);
+  box-shadow:0 30px 80px -30px rgba(99,102,241,0.35);
+}
+
+.price-badge{
+  position:absolute;
+  top:-12px; right:24px;
+  background:var(--accent-violet);
+  color:#fff;
+  font-family:var(--font-mono);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  padding:5px 14px;
+  border-radius:100px;
+}
+
+.price-plan-name{
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-bottom:14px;
+}
+.price-amount{
+  font-family:var(--font-mono);
+  font-size:42px;
+  font-weight:700;
+  letter-spacing:-1px;
+  margin-bottom:4px;
+}
+.price-amount .period{
+  font-size:14px;
+  font-weight:500;
+  color:var(--text-faint);
+}
+.price-sub{
+  font-size:13px;
+  color:var(--text-faint);
+  margin-bottom:24px;
+  font-family:var(--font-mono);
+}
+
+.price-features{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:28px;
+  flex-grow:1;
+}
+.price-feature{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  font-size:14px;
+  color:var(--text-secondary);
+  line-height:1.5;
+}
+.price-feature .check{
+  color:var(--accent-cyan);
+  flex-shrink:0;
+  margin-top:1px;
+  font-weight:700;
+}
+
+.price-cta{
+  display:block;
+  text-align:center;
+  padding:13px;
+  border-radius:100px;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  transition:all 0.25s ease;
+}
+.price-cta.primary{
+  background:var(--accent-violet);
+  color:#fff;
+}
+.price-cta.primary:hover{
+  background:var(--accent-violet-bright);
+  box-shadow:0 0 24px rgba(99,102,241,0.45);
+}
+.price-cta.secondary{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text-primary);
+}
+.price-cta.secondary:hover{
+  background:rgba(255,255,255,0.08);
+}
+
+/* Comparison table */
+.compare-table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  background:var(--bg-elevated);
+}
+.compare-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:640px;
+}
+.compare-table th, .compare-table td{
+  padding:16px 24px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+.compare-table th{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  font-weight:600;
+}
+.compare-table th:not(:first-child), .compare-table td:not(:first-child){
+  text-align:center;
+}
+.compare-table td:first-child{color:var(--text-secondary);}
+.compare-table tr:last-child td{border-bottom:none;}
+.compare-table .yes{color:var(--accent-cyan); font-weight:700;}
+.compare-table .no{color:var(--text-faint);}
+.compare-table .partial{color:var(--accent-amber); font-family:var(--font-mono); font-size:12px;}
+.compare-table thead th.col-paid{color:var(--accent-violet-bright);}
+
+/* ===== MSTP TEASER ===== */
+.mstp-banner{
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:48px;
+  background:linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(45,212,191,0.04) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:32px;
+  flex-wrap:wrap;
+}
+.mstp-text h3{
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:-0.5px;
+  margin-bottom:8px;
+}
+.mstp-text p{
+  color:var(--text-muted);
+  font-size:15px;
+  max-width:480px;
+}
+.mstp-text .tag{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:2px;
+  color:var(--accent-cyan);
+  margin-bottom:10px;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  border-top:1px solid var(--border);
+  padding:60px 0 40px;
+}
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:40px;
+  margin-bottom:40px;
+}
+.footer-links{
+  display:flex;
+  gap:48px;
+  flex-wrap:wrap;
+}
+.footer-col h4{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--text-faint);
+  margin-bottom:14px;
+}
+.footer-col a{
+  display:block;
+  color:var(--text-muted);
+  text-decoration:none;
+  font-size:14px;
+  margin-bottom:10px;
+  transition:color 0.2s;
+}
+.footer-col a:hover{color:var(--text-primary);}
+.footer-bottom{
+  border-top:1px solid var(--border);
+  padding-top:24px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  font-size:13px;
+  color:var(--text-faint);
+}
+
+@media (max-width:768px){
+  .mstp-banner{padding:32px; flex-direction:column; text-align:left;}
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-badge">MB</div>
+      <div class="nav-logo-text">
+        <span>Market</span>
+        <span>Basecamp</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#mstp">MSTP</a>
+      <a href="#" class="nav-cta">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Live Market Intelligence · NSE
+    </div>
+    <h1>Read the market<br>before it <span class="grad">reads you.</span></h1>
+    <p class="hero-sub">
+      <strong>Market Basecamp</strong> turns scattered breadth data, sector rotation, and institutional flows into one composite score — updated every trading day, built for traders who act on evidence, not noise.
+    </p>
+    <div class="hero-ctas">
+      <a href="#pricing" class="btn-primary">Start Free →</a>
+      <a href="#features" class="btn-secondary">See it in action</a>
+    </div>
+  </div>
+
+  <!-- Signature Gauge Widget -->
+  <div class="hero-widget">
+    <div class="widget-header">
+      <div class="widget-title">
+        Market Score · Nifty 500 Universe
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="ai-badge">● AI Powered</div>
+        <div class="widget-meta">500 stocks processed<br>Updated 10 Jun 2026</div>
+      </div>
+    </div>
+    <div class="gauge-row">
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 240 150" id="gaugeSvg">
+          <!-- background arc -->
+          <path d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke="#1a2138" stroke-width="14" stroke-linecap="round"/>
+          <!-- gradient arc (animated) -->
+          <path id="gaugeArc" d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round"
+                stroke-dasharray="314" stroke-dashoffset="314"/>
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f43f5e"/>
+              <stop offset="50%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#2dd4bf"/>
+            </linearGradient>
+          </defs>
+          <text x="20" y="148" font-family="JetBrains Mono" font-size="11" fill="#4a5578">0</text>
+          <text x="120" y="20" font-family="JetBrains Mono" font-size="11" fill="#4a5578" text-anchor="middle">50</text>
+          <text x="212" y="148" font-family="JetBrains Mono" font-size="11" fill="#4a5578" text-anchor="end">100</text>
+        </svg>
+        <div class="gauge-value"><span id="gaugeNum">0</span><span class="of100">/100</span></div>
+        <div class="gauge-label">Cautious</div>
+        <div class="gauge-sublabels">
+          <div class="gauge-sub">
+            <div class="gauge-sub-label">Regime</div>
+            <div class="gauge-sub-value">40</div>
+            <div class="gauge-sub-caption">slow · ceiling</div>
+          </div>
+          <div class="gauge-sub">
+            <div class="gauge-sub-label">Tactical</div>
+            <div class="gauge-sub-value">26</div>
+            <div class="gauge-sub-caption">fast · timing</div>
+          </div>
+        </div>
+      </div>
+      <div class="indicator-list">
+        <div class="indicator-group-label">Regime · Slow</div>
+        <div class="indicator-row">
+          <div class="indicator-name">200 EMA breadth</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="44"></div></div>
+          <div class="indicator-value">44</div>
+        </div>
+        <div class="indicator-row">
+          <div class="indicator-name">Key-index trend</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="34"></div></div>
+          <div class="indicator-value">34</div>
+        </div>
+        <div class="indicator-row">
+          <div class="indicator-name">50 EMA breadth</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="42"></div></div>
+          <div class="indicator-value">42</div>
+        </div>
+        <div class="indicator-group-label">Tactical · Fast</div>
+        <div class="indicator-row">
+          <div class="indicator-name">21 EMA breadth</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="35"></div></div>
+          <div class="indicator-value">35</div>
+        </div>
+        <div class="indicator-row">
+          <div class="indicator-name">Advance / Decline</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="23"></div></div>
+          <div class="indicator-value">23</div>
+        </div>
+        <div class="indicator-row">
+          <div class="indicator-name">52-week H / L</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="43"></div></div>
+          <div class="indicator-value">43</div>
+        </div>
+        <div class="indicator-row">
+          <div class="indicator-name">FII / DII flow</div>
+          <div class="indicator-bar-track"><div class="indicator-bar-fill" data-pct="2"></div></div>
+          <div class="indicator-value">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM STRIP -->
+<section class="section" style="padding-top:80px; padding-bottom:60px;">
+  <div class="container">
+    <div class="reveal" style="text-align:center; max-width:720px; margin:0 auto;">
+      <p style="font-size:clamp(18px,2.4vw,24px); color:var(--text-secondary); line-height:1.7; font-weight:500;">
+        Most traders check five different tabs before placing one trade — index levels, breadth, sector strength, FII/DII flows, and a watchlist that's already a day stale.
+        <span style="color:var(--text-primary); font-weight:700;"> Market Basecamp collapses all five into one.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 1: Market Data Analytics -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="feature-grid">
+      <div class="feature-text reveal">
+        <div class="section-eyebrow">01 · Market Data Analytics</div>
+        <h2 class="section-title">Every breadth signal, in one composite score.</h2>
+        <p class="section-desc">
+          Stop scanning seven different breadth charts every morning. Market Basecamp blends slow regime indicators with fast tactical ones into a single 0–100 score — and breaks down exactly which sectors are driving it.
+        </p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Regime + Tactical layers</strong> — 200/50 EMA breadth for the slow trend, 21 EMA and Advance/Decline for fast timing, weighted into one Market Score.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Sectoral breadth & terrain map</strong> — 13 sectors ranked by regime score, with drill-down to constituent stocks, RS vs Nifty 500, and 52-week proximity.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>FII/DII flow tracker</strong> — daily institutional buy/sell data with combined flow signal, sourced from NSE.</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-visual reveal">
+        <div class="mockup-card">
+          <div class="mockup-tabs">
+            <div class="mockup-tab active">Sectoral Breadth</div>
+            <div class="mockup-tab">Terrain Map</div>
+          </div>
+          <div class="heatmap-grid">
+            <div class="heatmap-cell">
+              <div class="heatmap-cell-name"><span>PHARMA</span><span>20 stk</span></div>
+              <div class="heatmap-cell-score" style="color:#a3e635;">52</div>
+              <div class="heatmap-cell-bar"><div class="heatmap-cell-bar-fill" style="width:52%; background:#a3e635;"></div></div>
+              <span class="heatmap-tag tag-neutral">NEUTRAL</span>
+            </div>
+            <div class="heatmap-cell">
+              <div class="heatmap-cell-name"><span>BANK NIFTY</span><span>14 stk</span></div>
+              <div class="heatmap-cell-score" style="color:#a3e635;">49</div>
+              <div class="heatmap-cell-bar"><div class="heatmap-cell-bar-fill" style="width:49%; background:#a3e635;"></div></div>
+              <span class="heatmap-tag tag-neutral">NEUTRAL</span>
+            </div>
+            <div class="heatmap-cell">
+              <div class="heatmap-cell-name"><span>NIFTY IT</span><span>10 stk</span></div>
+              <div class="heatmap-cell-score" style="color:var(--accent-rose);">20</div>
+              <div class="heatmap-cell-bar"><div class="heatmap-cell-bar-fill" style="width:20%; background:var(--accent-rose);"></div></div>
+              <span class="heatmap-tag tag-strongbear">STRONG BEAR</span>
+            </div>
+            <div class="heatmap-cell">
+              <div class="heatmap-cell-name"><span>NIFTY REALTY</span><span>10 stk</span></div>
+              <div class="heatmap-cell-score" style="color:var(--accent-rose);">11</div>
+              <div class="heatmap-cell-bar"><div class="heatmap-cell-bar-fill" style="width:11%; background:var(--accent-rose);"></div></div>
+              <span class="heatmap-tag tag-strongbear">STRONG BEAR</span>
+            </div>
+          </div>
+          <div style="margin-top:14px; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+              <div style="font-family:var(--font-mono); font-size:9px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase; margin-bottom:4px;">FII / DII · 10 Jun</div>
+              <div style="font-size:13px; color:var(--text-secondary);">FII Sell · DII Buy</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:var(--font-mono); font-weight:700; font-size:18px; color:var(--accent-rose);">−₹2,125 Cr</div>
+              <div style="font-family:var(--font-mono); font-size:12px; color:var(--accent-cyan);">+₹3,124 Cr</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 2: Leading Stocks Filter -->
+<section class="section">
+  <div class="container">
+    <div class="feature-grid reverse">
+      <div class="feature-text reveal">
+        <div class="section-eyebrow">02 · Leading Stocks Filter</div>
+        <h2 class="section-title">Find the 60 stocks leading the market — before everyone else does.</h2>
+        <p class="section-desc">
+          A focused watchlist of 172 stocks (from a full universe of 285), ranked by Price Strength — a composite of how far each stock trades above its 21, 50, and 200-day EMAs. No formulas to write. No screens to configure.
+        </p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Price Strength Rating (0–99)</strong> — ranks every stock by trend strength relative to its own moving averages, updated daily.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Chart Scan mode</strong> — flip through your watchlist one chart at a time, with EMA 10/20/50/200 overlays, fundamentals, and technical distances side by side.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Focused vs Full Watchlist</strong> — toggle between the curated leadership list and the broader universe in one click.</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-visual reveal">
+        <div class="mockup-card">
+          <div class="mockup-tabs">
+            <div class="mockup-tab active">Focused Watchlist · 172</div>
+            <div class="mockup-tab">Full Watchlist · 285</div>
+          </div>
+          <table class="watchlist-table">
+            <thead>
+              <tr><th>Symbol</th><th>vs 200 EMA</th><th>Strength</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="wt-symbol">ATLANTAELE</div><div class="wt-company">Atlanta Electricals</div></td>
+                <td class="wt-pos">+55.2%</td>
+                <td><span class="wt-score">97</span></td>
+              </tr>
+              <tr>
+                <td><div class="wt-symbol">BAJAJCON</div><div class="wt-company">Bajaj Consumer Care</div></td>
+                <td class="wt-pos">+52.7%</td>
+                <td><span class="wt-score">97</span></td>
+              </tr>
+              <tr>
+                <td><div class="wt-symbol">ATHERENERG</div><div class="wt-company">Ather Energy Ltd</div></td>
+                <td class="wt-pos">+43.9%</td>
+                <td><span class="wt-score">97</span></td>
+              </tr>
+              <tr>
+                <td><div class="wt-symbol">SWANDEF</div><div class="wt-company">Swan Defence & Heavy Ind</div></td>
+                <td class="wt-pos">+55.8%</td>
+                <td><span class="wt-score">99</span></td>
+              </tr>
+              <tr>
+                <td><div class="wt-symbol">MTARTECH</div><div class="wt-company">Mtar Technologies</div></td>
+                <td class="wt-pos">+76.4%</td>
+                <td><span class="wt-score">99</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 3: Trading Journal -->
+<section class="section">
+  <div class="container">
+    <div class="feature-grid">
+      <div class="feature-text reveal">
+        <div class="section-eyebrow">03 · Professional Trading Journal</div>
+        <h2 class="section-title">Every entry, exit, and pyramid — mapped automatically.</h2>
+        <p class="section-desc">
+          Stop reconstructing your trades from memory at month-end. Market Basecamp logs every action — entries, partial exits, pyramids — and turns it into a full journal with realised P&L, win rate, and profit factor.
+        </p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Trade journey timeline</strong> — initial entry, every add and partial exit, and final exit with running P&L for each step.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Annotated trade cards</strong> — write your thesis ("strong recovery after post-result sell-off") right alongside the chart.</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-item-icon">◆</div>
+            <div class="feature-item-text"><strong>Portfolio-level stats</strong> — win rate, profit factor, average return, and max profit/loss across your full trading history.</div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-visual reveal">
+        <div class="mockup-card">
+          <div class="trade-card">
+            <div class="trade-card-header">
+              <div>
+                <div class="trade-card-symbol">
+                  <span class="sym">PARAS</span>
+                  <span class="trade-tag tag-long">Long</span>
+                  <span class="trade-tag tag-pyramid">Pyramided</span>
+                  <span class="trade-tag tag-reduced">Reduced</span>
+                </div>
+                <div class="trade-card-name">Paras Defence & Space Tech · Defence · Flat Base</div>
+              </div>
+              <div>
+                <div class="trade-card-return">+20.3%</div>
+                <div class="trade-card-return-sub">+3.2R</div>
+              </div>
+            </div>
+            <div class="trade-note">"Strong recovery after a post-result sell-off; Strong Qtr; Sectoral strength in defence and drones"</div>
+            <div class="trade-stats">
+              <div class="trade-stat">
+                <div class="trade-stat-label">Entry / CMP</div>
+                <div class="trade-stat-value">₹862.3 → ₹1,040.5</div>
+              </div>
+              <div class="trade-stat">
+                <div class="trade-stat-label">Position Size</div>
+                <div class="trade-stat-value">18.83%</div>
+              </div>
+              <div class="trade-stat">
+                <div class="trade-stat-label">Notional P&L</div>
+                <div class="trade-stat-value" style="color:var(--accent-cyan);">+₹3,24,638</div>
+              </div>
+            </div>
+            <div class="trade-log">
+              <div class="trade-log-row"><span><span class="trade-log-date">25 May</span>Entry · 1800 shares @ ₹862.3</span><span>18.26% of capital</span></div>
+              <div class="trade-log-row"><span><span class="trade-log-date">26 May</span>Added · 510 shares @ ₹874.6</span><span>5.25% of capital</span></div>
+              <div class="trade-log-row"><span><span class="trade-log-date">10 Jun</span>Partial Exit · 460 shares @ ₹1,053</span><span class="wt-pos">+₹86,471 (+21.73%)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="reveal" style="text-align:center; margin-bottom:64px;">
+      <div class="section-eyebrow" style="display:flex; justify-content:center;">Pricing</div>
+      <h2 class="section-title" style="margin:0 auto 16px; max-width:600px;">Start free. Upgrade when the edge pays for itself.</h2>
+      <p class="section-desc" style="margin:0 auto;">No hidden fees. Cancel anytime. Annual plans save you over 16% versus monthly.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <!-- Free -->
+      <div class="price-card">
+        <div class="price-plan-name">Free</div>
+        <div class="price-amount">₹0</div>
+        <div class="price-sub">forever</div>
+        <div class="price-features">
+          <div class="price-feature"><span class="check">✓</span> Market Score (daily, 1-day delayed)</div>
+          <div class="price-feature"><span class="check">✓</span> Key Indices snapshot</div>
+          <div class="price-feature"><span class="check">✓</span> Top Gainers / Losers</div>
+          <div class="price-feature"><span class="check">✓</span> Limited Watchlist (top 20 stocks)</div>
+        </div>
+        <a href="#" class="price-cta secondary">Create free account</a>
+      </div>
+
+      <!-- Monthly -->
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-plan-name">Monthly</div>
+        <div class="price-amount">₹999<span class="period">/mo</span></div>
+        <div class="price-sub">billed monthly</div>
+        <div class="price-features">
+          <div class="price-feature"><span class="check">✓</span> Real-time Market Score & breadth</div>
+          <div class="price-feature"><span class="check">✓</span> Full Sectoral Breadth & Terrain Map</div>
+          <div class="price-feature"><span class="check">✓</span> Focused + Full Watchlist (172 + 285 stocks)</div>
+          <div class="price-feature"><span class="check">✓</span> Chart Scan with EMA overlays</div>
+          <div class="price-feature"><span class="check">✓</span> Full Trading Journal & Portfolio stats</div>
+          <div class="price-feature"><span class="check">✓</span> FII/DII flow history</div>
+        </div>
+        <a href="#" class="price-cta primary">Start Monthly</a>
+      </div>
+
+      <!-- Annual -->
+      <div class="price-card">
+        <div class="price-plan-name">Annual</div>
+        <div class="price-amount">₹9,999<span class="period">/yr</span></div>
+        <div class="price-sub">≈ ₹833/mo · save ₹1,989</div>
+        <div class="price-features">
+          <div class="price-feature"><span class="check">✓</span> Everything in Monthly</div>
+          <div class="price-feature"><span class="check">✓</span> 2 months free vs monthly billing</div>
+          <div class="price-feature"><span class="check">✓</span> Priority feature requests</div>
+          <div class="price-feature"><span class="check">✓</span> Early access to new modules</div>
+        </div>
+        <a href="#" class="price-cta secondary">Start Annual</a>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="reveal compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Free</th>
+            <th class="col-paid">Paid (Monthly / Annual)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Market Score & breadth indicators</td>
+            <td><span class="partial">1-day delayed</span></td>
+            <td><span class="yes">Real-time</span></td>
+          </tr>
+          <tr>
+            <td>Sectoral Breadth Table</td>
+            <td><span class="no">—</span></td>
+            <td><span class="yes">✓ All 13 sectors</span></td>
+          </tr>
+          <tr>
+            <td>Sectoral Terrain Map</td>
+            <td><span class="no">—</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>FII / DII Flow Data</td>
+            <td><span class="partial">Today only</span></td>
+            <td><span class="yes">Full history</span></td>
+          </tr>
+          <tr>
+            <td>Leading Stocks Watchlist</td>
+            <td><span class="partial">Top 20</span></td>
+            <td><span class="yes">172 + 285 stocks</span></td>
+          </tr>
+          <tr>
+            <td>Chart Scan (EMA overlays, fundamentals)</td>
+            <td><span class="no">—</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Trading Journal & Trade Cards</td>
+            <td><span class="no">—</span></td>
+            <td><span class="yes">✓ Full journal</span></td>
+          </tr>
+          <tr>
+            <td>Portfolio Stats (win rate, profit factor)</td>
+            <td><span class="no">—</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Key Indices & Gainers/Losers</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- MSTP TEASER -->
+<section class="section" id="mstp" style="padding-top:0;">
+  <div class="container">
+    <div class="mstp-banner reveal">
+      <div class="mstp-text">
+        <div class="tag">MASTER SWING TRADER PROGRAM</div>
+        <h3>Tools are half the edge. The other half is process.</h3>
+        <p>Market Basecamp gives you the data. MSTP teaches you how to read it — position sizing, pyramiding, and exits, taught the way the journal above is built.</p>
+      </div>
+      <a href="#" class="btn-secondary">Explore MSTP →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <a href="#" class="nav-logo" style="margin-bottom:14px; display:inline-flex;">
+          <div class="nav-logo-badge">MB</div>
+          <div class="nav-logo-text">
+            <span>Market</span>
+            <span>Basecamp</span>
+          </div>
+        </a>
+        <p style="color:var(--text-faint); font-size:13px; max-width:280px; margin-top:14px;">
+          A product by TraderHikes — built for Indian retail traders who want institutional-grade market reads without the Bloomberg bill.
+        </p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#mstp">MSTP</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="https://www.traderhikes.com/" target="_blank">TraderHikes</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TraderHikes. All rights reserved.</span>
+      <span>Market data sourced from NSE India · For educational purposes only · Not investment advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Animate gauge on load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const arc = document.getElementById('gaugeArc');
+    const targetOffset = 314 - (314 * 0.39);
+    arc.style.transition = 'stroke-dashoffset 1.6s cubic-bezier(.16,1,.3,1)';
+    arc.style.strokeDashoffset = targetOffset;
+
+    let current = 0;
+    const target = 39;
+    const duration = 1600;
+    const startTime = performance.now();
+    function tick(now){
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      current = Math.round(target * eased);
+      document.getElementById('gaugeNum').textContent = current;
+      if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    document.querySelectorAll('.indicator-bar-fill').forEach(bar => {
+      const pct = bar.getAttribute('data-pct');
+      bar.style.width = pct + '%';
+    });
+  }, 200);
+});
+
+// Scroll-triggered reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

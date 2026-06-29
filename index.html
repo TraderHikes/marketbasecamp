@@ -302,13 +302,33 @@ body{
   z-index:1;
   width:100%;
   max-width:1180px;
-  background:linear-gradient(180deg, var(--bg-elevated) 0%, #0a0e1c 100%);
-  border:1px solid var(--border);
+  background:
+    linear-gradient(180deg, var(--bg-elevated) 0%, #0a0e1c 100%) padding-box,
+    conic-gradient(from var(--comet-angle),
+      transparent 0deg,
+      transparent 200deg,
+      rgba(99,102,241,0.25) 260deg,
+      rgba(99,102,241,0.7) 305deg,
+      rgba(165,180,255,1) 340deg,
+      rgba(220,230,255,1) 355deg,
+      transparent 360deg) border-box;
+  border:2px solid transparent;
   border-radius:var(--radius-lg);
   padding:24px;
-  box-shadow:0 30px 90px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  box-shadow:
+    0 30px 90px -30px rgba(0,0,0,0.7),
+    0 0 50px rgba(99,102,241,0.18);
+  filter:drop-shadow(0 0 8px rgba(143,163,255,0.22));
   opacity:0;
-  animation:fadeUp 1s ease 0.4s forwards;
+  animation:fadeUp 1s ease 0.4s forwards, cometSpin 4.5s linear infinite;
+}
+/* Fallback for browsers without @property support */
+@supports not (background: paint(something)) {
+  .hero-widget{
+    background:linear-gradient(180deg, var(--bg-elevated) 0%, #0a0e1c 100%);
+    border:1.5px solid rgba(143,163,255,0.35);
+    animation:fadeUp 1s ease 0.4s forwards;
+  }
 }
 /* soft-focus halo behind the widget */
 .hero-widget::after{
@@ -376,6 +396,53 @@ body{
 }
 
 /* ===== HAWK EYE MULTI-PANEL DASHBOARD ===== */
+.hawk-shell{
+  display:grid;
+  grid-template-columns:58px 1fr;
+  gap:14px;
+}
+@media (max-width:620px){
+  .hawk-shell{grid-template-columns:1fr;}
+  .hawk-sidebar{display:none;}
+}
+
+.hawk-sidebar{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding-top:4px;
+}
+.hawk-nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  width:100%;
+  padding:9px 4px;
+  border-radius:10px;
+  color:var(--text-faint);
+  text-align:center;
+}
+.hawk-nav-item.active{
+  background:rgba(99,102,241,0.12);
+  color:var(--accent-violet-bright);
+  box-shadow:inset 0 0 0 1px rgba(99,102,241,0.25);
+}
+.hawk-nav-ico{
+  width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+  line-height:1;
+}
+.hawk-nav-label{
+  font-size:7px;
+  font-weight:600;
+  letter-spacing:0.2px;
+  line-height:1.15;
+}
+.hawk-sidebar-spacer{flex:1;}
+
 .hawk-grid{
   display:grid;
   grid-template-columns:1.4fr 1fr 1fr 1fr;
@@ -385,12 +452,14 @@ body{
 .hawk-col{display:flex; flex-direction:column; gap:12px;}
 .hawk-grid-bottom{
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:1.4fr 3fr;
   gap:12px;
   margin-top:12px;
+  align-items:start;
 }
 @media (max-width:1000px){
   .hawk-grid{grid-template-columns:1fr 1fr;}
+  .hawk-grid-bottom{grid-template-columns:1fr;}
 }
 @media (max-width:620px){
   .hawk-grid{grid-template-columns:1fr;}
@@ -558,7 +627,7 @@ body{
 /* Sector heatmap strip */
 .hheat-grid{
   display:grid;
-  grid-template-columns:repeat(11, 1fr);
+  grid-template-columns:repeat(8, 1fr);
   gap:5px;
 }
 @media (max-width:1000px){
@@ -1480,6 +1549,31 @@ body{
       </div>
     </div>
 
+    <div class="hawk-shell">
+      <div class="hawk-sidebar">
+        <div class="hawk-nav-item active">
+          <div class="hawk-nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <div class="hawk-nav-label">Hawk Eye</div>
+        </div>
+        <div class="hawk-nav-item">
+          <div class="hawk-nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+          <div class="hawk-nav-label">Model<br>Portfolio</div>
+        </div>
+        <div class="hawk-nav-item">
+          <div class="hawk-nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 3-3 3 3 5-5"/></svg></div>
+          <div class="hawk-nav-label">Market<br>Data</div>
+        </div>
+        <div class="hawk-nav-item">
+          <div class="hawk-nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="hawk-nav-label">Model<br>Watchlist</div>
+        </div>
+        <div class="hawk-sidebar-spacer"></div>
+        <div class="hawk-nav-item">
+          <div class="hawk-nav-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+          <div class="hawk-nav-label">Inbox</div>
+        </div>
+      </div>
+      <div class="hawk-main">
     <div class="hawk-grid">
       <!-- COLUMN 1: Daily Brief + Discipline -->
       <div class="hawk-col">
@@ -1512,23 +1606,6 @@ body{
             </div>
           </div>
           <div class="hdisc-note">Discipline signals shape your MSTP coaching focus — stops, holding period, consistency.</div>
-        </div>
-        <div class="hpanel">
-          <div class="hpanel-title">FII / DII Flows <span class="hpanel-tag">Thu, 25 Jun</span></div>
-          <div class="hdisc-grid" style="margin-bottom:0;">
-            <div class="hdisc-cell">
-              <div class="hdisc-l">FII Cash</div>
-              <div class="hdisc-v pos-green">+₹383 Cr</div>
-            </div>
-            <div class="hdisc-cell">
-              <div class="hdisc-l">DII Cash</div>
-              <div class="hdisc-v pos-green">+₹5,747 Cr</div>
-            </div>
-          </div>
-          <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
-            <span class="hdisc-l" style="margin-bottom:0;">Net Institutional Flow</span>
-            <span class="hdisc-v pos-green" style="font-size:16px;">+₹6,130 Cr</span>
-          </div>
         </div>
       </div>
 
@@ -1716,8 +1793,25 @@ body{
       </div>
     </div>
 
-    <!-- Sector heatmap strip (full width) -->
+    <!-- Bottom row: FII/DII Flows (left) + Sector Heatmap (right) -->
     <div class="hawk-grid-bottom">
+      <div class="hpanel">
+        <div class="hpanel-title">FII / DII Flows <span class="hpanel-tag">Thu, 25 Jun</span></div>
+        <div class="hdisc-grid" style="margin-bottom:0;">
+          <div class="hdisc-cell">
+            <div class="hdisc-l">FII Cash</div>
+            <div class="hdisc-v pos-green">+₹383 Cr</div>
+          </div>
+          <div class="hdisc-cell">
+            <div class="hdisc-l">DII Cash</div>
+            <div class="hdisc-v pos-green">+₹5,747 Cr</div>
+          </div>
+        </div>
+        <div style="margin-top:10px; border-top:1px solid var(--border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span class="hdisc-l" style="margin-bottom:0;">Net Institutional Flow</span>
+          <span class="hdisc-v pos-green" style="font-size:16px;">+₹6,130 Cr</span>
+        </div>
+      </div>
       <div class="hpanel">
         <div class="hpanel-title">Sector Heatmap <span class="hpanel-tag">Regime Score</span></div>
         <div class="hheat-grid">
@@ -1746,6 +1840,8 @@ body{
         </div>
       </div>
     </div>
+      </div><!-- /hawk-main -->
+    </div><!-- /hawk-shell -->
   </div>
 </section>
 
